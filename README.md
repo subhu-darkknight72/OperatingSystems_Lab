@@ -45,9 +45,8 @@ Note: Ignore race conditions for now as they will be addressed in the next assig
 A <code>push update mechanism</code> using multiple <code>threads</code> for a social media website, where updates from friends are received and sorted based on time or priority. The threads and their functionalities are specified.
 - **Main thread :** loads a static graph of Github developers. Each node maintains a wall queue and a feed queue, with a variable indicating reading order, and creates userSimulator, readPost, and pushUpdate threads.
 - **userSimulator :**  Generate actions for 100 random nodes in the graph and pushes them to the wall queue of the user node and a queue monitored by pushUpdate threads, based on a proportion of log2(degree(node)).
-- **pushUpdate :** A set of 25 threads monitor a shared queue populated by userSimulator, and for each new action in the queue, a worker thread will push updates to all neighbors of the associated node by adding the element to their feed queue, using conditional variables to optimize monitoring, and logging all functionalities into the sns.log file.
-
-- **Main thread :** 
+- **pushUpdate :** A set of 25 threads monitor a shared queue populated by userSimulator, and for each new action in the queue, a worker thread will push updates to all neighbors of the associated node by adding the element to their feed queue, using conditional variables to optimize monitoring.
+- **readPost :** A set of 10 threads monitor the neighbors' feed queues, deque actions and print messages in either chronological or priority order depending on the node variable. The monitoring will use conditional variables to improve efficiency.
 
 
 ## Assignment 1 : shell scripting and shell commands
