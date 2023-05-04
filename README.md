@@ -13,7 +13,7 @@ Programs in shell script under the Linux environment that would run in bash term
 - Pattern Matching - Username Validation : checks if the username is valid or not
 - File Handling - JSON Parsing : convert each JSONL file into a CSV file
 - File Manipulation / Argument Handling : converting a line to alternating case without loops
-- Pattern matching : input to the folder and iterate through all the python files in the directory and subdirectories and print the file name along with the path and all the comments in the file with their line numbers.
+- Pattern matching : input to the folder and iterate through all the python files in the directory and subdirectories and print the file name, the path and all the comments in the file with their line numbers.
 - File Handling/Sieve of Eratosthenes/Loops/Arrays
 - File Handling / Sorting / Understanding strings
 - CSV File Manipulation
