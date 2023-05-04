@@ -34,7 +34,7 @@ Additionally, the shell searches through history using up/down arrow keys, and d
 
 ## Assignment 3 : Hands-on experience of using shared-memory
 There will be 1 producer process updating a Facebook friend circle network and 10 consumer (worker) processes calculating shortest paths between people, using <code>shared memory</code> to communicate between processes.
-- Main Process: Loads a dynamic graph into a shared memory, and spawns the producer and consumer processes
+- Main Process: Loads a dynamic graph into a shared memory, and spawns the producer & consumer processes
 - 
 
 ## Assignment 1 : shell scripting and shell commands
