@@ -52,7 +52,7 @@ Note: To avoid race conditions, the use of locks is necessary, but using too man
 
 
 ## Assignment 5 : Semaphores to synchronize between threads
- A system with a hotel having N rooms and X cleaning staff and Y guests with randomly allocated priorities. Semaphores will be used to allow multiple threads to access critical sessions, and there will be X threads modeling cleaning staff behavior and Y threads modeling guest behavior. Functionalities of main components are:
+ A system with a hotel having _N rooms_ and _X cleaning staff_ and _Y guests_ with randomly allocated priorities. <code>Semaphores</code> will be used to allow multiple threads to access critical sessions, and there will be X threads modeling cleaning staff behavior and Y threads modeling guest behavior. Functionalities of main components are:
 
 - **Main thread :** guest and cleaning staff threads are created, and semaphores are initialized to control access to hotel rooms for these threads.
 - **Guest thread :** sleep for a random time, then request a room in the hotel for a duration of 10-30 seconds, allotted if conditions are met; repeats indefinitely until all rooms have at least had 2 occupants.
