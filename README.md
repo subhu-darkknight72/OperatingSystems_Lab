@@ -8,7 +8,7 @@ Assignments for the OS Lab Course Offered in the Spring Semester of 2023.
 - 20CS10086: Archit Mangrulkar
 
 ## Assignment 1 : shell scripting and shell commands
-Programs in shell script under the Linux environment that would run in bash terminal and perform the following Tasks
+Programs in shell script under the Linux env. that would run in bash terminal and perform the following Tasks
 - Computation - Finding LCM : reverses all the numbers and outputs their LCM.
 - Pattern Matching - Username Validation : checks if the usernames in file are valid or not.
 - File Handling - JSON Parsing : convert each JSONL file into a CSV file, and extract given attributes.
