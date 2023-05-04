@@ -30,7 +30,7 @@ A shell as an application program on top of the Linux kernel. It accepts user co
 - Print the name of the working directory, 
 - Handle wildcards in commands
 
-Additionally, the shell , search through history using up/down arrow keys, and detects simple malwares.
+Additionally, the shell searches through history using up/down arrow keys, and detects simple malwares.
 
 ## Assignment 1 : shell scripting and shell commands
 - **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
