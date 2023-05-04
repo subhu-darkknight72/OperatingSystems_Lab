@@ -41,7 +41,7 @@ There will be _1 producer_ process updating a Facebook friend circle network and
 
 Note: Ignore race conditions for now as they will be addressed in the next assignment.
 
-## Assignment 4 : push-updates mechanism using threads.
+## Assignment 4 : Push-updates mechanism using threads.
 A <code>push update</code> mechanism using multiple <code>threads</code> for a social media website, where updates from friends are received and sorted based on time or priority. The threads and their functionalities are specified.
 - **Main thread :** loads a static graph of Github developers. Each node maintains a wall queue and a feed queue, with a variable indicating reading order, and creates <code>userSimulator</code>, <code>readPost</code>, and <code>pushUpdate</code> threads.
 - **userSimulator :**  Generate actions for 100 random nodes in the graph and pushes them to the <code>wall queue</code> of the user node and a queue monitored by pushUpdate threads, based on a proportion of log2(degree(node)).
@@ -58,8 +58,8 @@ Note: To avoid race conditions, the use of locks is necessary, but using too man
 ## Assignment 6 : Virtual memory management
 It aims to implement a basic memory management module that customizes <code>memory allocation and deallocation</code> for large-scale real-world systems. Such systems often have their memory management modules and do not rely on the OS for memory management. Here, we created our memory management library — a header file <code>“goodmalloc.h”</code> and an implementation file <code>“goodmalloc.c”</code> with following functionalities:
 
-- **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
-- **Question 2:** Write a simple TCP iterative server and client to evaluate arithmetic expressions
+- **createMem :** creates a memory segment, which is used at the beginning to allocate space for the code written using this library. It returns a big array of memory blocks.
+- **createList :** creates a linked list of elements in the memory created by createMem function using local addresses, which are converted to suitable addresses for data access; the memory allocation uses First Fit or Best Fit and local variables are freed up before returning from a function using a global stack for bookkeeping.
 
 <!-- .
 ## Instruction
