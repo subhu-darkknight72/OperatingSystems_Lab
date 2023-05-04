@@ -44,7 +44,7 @@ Note: Ignore race conditions for now as they will be addressed in the next assig
 ## Assignment 4 : push-updates mechanism using threads.
 A <code>push update mechanism</code> using multiple <code>threads</code> for a social media website, where updates from friends are received and sorted based on time or priority. The threads and their functionalities are specified.
 - **Main thread :** loads a static graph of Github developers. Each node maintains a wall queue and a feed queue, with a variable indicating reading order, and creates userSimulator, readPost, and pushUpdate threads.
-- **Main thread :** 
+- **userSimulator :**  generates actions for 100 random nodes in the graph and pushes them to the wall queue of the user node and a queue monitored by pushUpdate threads, based on a proportion of log2(degree(node)). It repeats after sleeping for 2 minutes and logs the actions generated to a file and terminal.
 - **Main thread :** 
 - **Main thread :** 
 
