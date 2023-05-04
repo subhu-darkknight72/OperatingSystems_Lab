@@ -56,7 +56,7 @@ Note: To avoid race conditions, the use of locks is necessary, but using too man
 
 - **Main thread :** guest and cleaning staff threads are created, and semaphores are initialized to control access to hotel rooms for these threads.
 - **Guest thread :** sleep for a random time, then request a room in the hotel for a duration of 10-30 seconds, allotted if conditions are met; repeats indefinitely until all rooms have at least had 2 occupants.
-- **Cleaning Staff thread :** wakes up when all rooms are occupied 2 times, selects a random room occupied since last cleaning, sleeps for an amount of time proportional to the time it was occupied, cleans the room and marks it as clean. This is done for all rooms in the hotel.
+- **Cleaning Staff thread :** wakes up when all rooms are occupied 2 times  and the hotel needs to be cleaned. Selects a random room occupied since last cleaning, sleeps for an amount of time proportional to the time it was occupied, cleans the room and marks it as clean. This is done for all rooms in the hotel.
 
 ## Assignment 6 : Virtual memory management
 It aims to implement a basic memory management module that customizes <code>memory allocation and deallocation</code> for large-scale real-world systems. Such systems often have their memory management modules and do not rely on the OS for memory management. Here, we created our memory management library — a header file <code>“goodmalloc.h”</code> and an implementation file <code>“goodmalloc.c”</code> with following functionalities:
