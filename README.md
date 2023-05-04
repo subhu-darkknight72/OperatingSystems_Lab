@@ -32,6 +32,11 @@ A shell as an application program on top of the Linux kernel. It accepts user co
 
 Additionally, the shell searches through history using up/down arrow keys, and detects simple malwares.
 
+## Assignment 3 : Hands-on experience of using shared-memory
+There will be 1 producer process updating a Facebook friend circle network and 10 consumer (worker) processes calculating shortest paths between people, using shared memory to communicate between
+processes.
+
+
 ## Assignment 1 : shell scripting and shell commands
 - **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
 - **Question 2:** Write a simple TCP iterative server and client to evaluate arithmetic expressions
