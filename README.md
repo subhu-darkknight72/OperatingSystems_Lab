@@ -52,8 +52,11 @@ Note: To avoid race conditions, the use of locks is necessary, but using too man
 
 
 ## Assignment 5 : Semaphores to synchronize between threads
-- **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
-- **Question 2:** Write a simple TCP iterative server and client to evaluate arithmetic expressions
+ A system with a hotel having N rooms and X cleaning staff and Y guests with randomly allocated priorities. Semaphores will be used to allow multiple threads to access critical sessions, and there will be X threads modeling cleaning staff behavior and Y threads modeling guest behavior.
+
+- **Main thread :** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
+- **Guest thread :** Write a simple TCP iterative server and client to evaluate arithmetic expressions
+- **Cleaning Staff thread :** Write a simple TCP iterative server and client to evaluate arithmetic expressions
 
 ## Assignment 6 : Virtual memory management
 It aims to implement a basic memory management module that customizes <code>memory allocation and deallocation</code> for large-scale real-world systems. Such systems often have their memory management modules and do not rely on the OS for memory management. Here, we created our memory management library — a header file <code>“goodmalloc.h”</code> and an implementation file <code>“goodmalloc.c”</code> with following functionalities:
