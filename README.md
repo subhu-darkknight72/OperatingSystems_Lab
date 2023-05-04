@@ -17,7 +17,8 @@ Programs in shell script under the Linux env. that would run in bash terminal an
 - Loops/Arrays - Sieve of Eratosthenes : finds out all the prime divisors of “n” using SoE only once.
 - File Handling - Sorting :  gather names (across all files) beginning with the same letter in a single file
 - CSV File Manipulation : track expenses by adding, sorting and displaying records in a csv file with columns for date, category, amount, and name. And also provide options to view total expenses.
-- Data Analysis
+- Data Analysis : takes file input, and outputs the count of majors, names of students with 2 or more majors, and number of students with a single major.
+
 
 ## Assignment 1 : shell scripting and shell commands
 - **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
