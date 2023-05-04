@@ -55,6 +55,10 @@ Note: To avoid race conditions, the use of locks is necessary, but using too man
 - **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
 - **Question 2:** Write a simple TCP iterative server and client to evaluate arithmetic expressions
 
+## Assignment 6 : manual memory management for efficient coding
+- **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
+- **Question 2:** Write a simple TCP iterative server and client to evaluate arithmetic expressions
+
 <!-- .
 ## Instruction
 - **Create virtual environment**
