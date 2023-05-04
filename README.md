@@ -47,8 +47,10 @@ A <code>push update</code> mechanism using multiple <code>threads</code> for a s
 - **Question 2:** Write a simple TCP iterative server and client to evaluate arithmetic expressions
 
 ## Assignment 1 : shell scripting and shell commands
-- **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
-- **Question 2:** Write a simple TCP iterative server and client to evaluate arithmetic expressions
+- **Main thread :** loads a static graph of Github developers, and each node maintains a wall queue and a feed queue, with a variable indicating priority or chronological reading order, and creates userSimulator, readPost, and pushUpdate threads.
+- **Main thread :** 
+- **Main thread :** 
+- **Main thread :** 
 
 <!-- .
 ## Instruction
