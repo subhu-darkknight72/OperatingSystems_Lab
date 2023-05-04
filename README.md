@@ -9,15 +9,15 @@ Assignments for the OS Lab Course Offered in the Spring Semester of 2023.
 
 ## Assignment 1 : shell scripting and shell commands
 Programs in shell script under the Linux env. that would run in bash terminal and perform the following Tasks
-- Computation - Finding LCM : reverses all the numbers and outputs their LCM.
-- Pattern Matching - Username Validation : checks if the usernames in file are valid or not.
-- File Handling - JSON Parsing : convert each JSONL file into a CSV file, and extract given attributes.
-- File Manipulation - Argument Handling : converting a line to alternating case without loops.
-- Pattern matching : input to the folder and iterate through all the python files in the directory and subdirectories and print the file name, the path and all the comments in the file with their line numbers.
-- Loops/Arrays - Sieve of Eratosthenes : finds out all the prime divisors of “n” using SoE only once.
-- File Handling - Sorting :  gather names (across all files) beginning with the same letter in a single file
-- CSV File Manipulation : track expenses by adding, sorting and displaying records in a csv file with columns for date, category, amount, and name. And also provide options to view total expenses.
-- Data Analysis : takes text file input, and outputs the count of majors in descending order, names of students with 2 or more majors, and number of students with a single major.
+- **Computation - Finding LCM** : reverses all the numbers and outputs their LCM.
+- **Pattern Matching - Username Validation** : checks if the usernames in file are valid or not.
+- **File Handling - JSON Parsing** : convert each JSONL file into a CSV file, and extract given attributes.
+- **File Manipulation - Argument Handling** : converting a line to alternating case without loops.
+- **Pattern matching** : input to the folder and iterate through all the python files in the directory and subdirectories and print the file name, the path and all the comments in the file with their line numbers.
+- **Loops/Arrays** - Sieve of Eratosthenes : finds out all the prime divisors of “n” using SoE only once.
+- **File Handling - Sorting** :  gather names (across all files) beginning with the same letter in a single file
+- **CSV File Manipulation** : track expenses by adding, sorting and displaying records in a csv file with columns for date, category, amount, and name. And also provide options to view total expenses.
+- **Data Analysis** : takes text file input, and outputs the count of majors in descending order, names of students with 2 or more majors alphabetically, and number of students with a single major.
 
 
 ## Assignment 1 : shell scripting and shell commands
