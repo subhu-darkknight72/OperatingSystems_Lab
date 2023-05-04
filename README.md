@@ -61,7 +61,7 @@ It aims to implement a basic memory management module that customizes <code>memo
 - **createMem :** creates a memory segment, which is used at the beginning to allocate space for the code written using this library. It returns a big array of memory blocks.
 - **createList :** creates a linked list of elements in the memory created by createMem() using local addresses, which are converted to suitable addresses for data access; the memory allocation uses First Fit or Best Fit and local variables are freed up before returning from a function using a global stack for bookkeeping.
 - **assignVal :** updates a specified range of elements in a locally managed linked list with an array of values and returns an error if the size of the array doesn't match the number of elements to be updated.
-- **freeElem :** creates a memory segment, which is used at the beginning to allocate space for the code written using this library. It returns a big array of memory blocks.
+- **freeElem :** free the memory of local variables, should be called before returning or explicitly, and raises an error if an invalid local address is provided.
 
 <!-- .
 ## Instruction
