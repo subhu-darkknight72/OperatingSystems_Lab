@@ -42,6 +42,7 @@ There will be _1 producer_ process updating a Facebook friend circle network and
 Note: Ignore race conditions for now as they will be addressed in the next assignment.
 
 ## Assignment 4 : push-updates mechanism using threads.
+A <code>push update</code> mechanism using multiple <code>threads</code> for a social media website, where updates from friends are received and sorted based on time or priority. The threads and their functionalities are specified.
 - **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
 - **Question 2:** Write a simple TCP iterative server and client to evaluate arithmetic expressions
 
