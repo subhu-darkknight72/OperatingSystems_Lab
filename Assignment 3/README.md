@@ -1,19 +1,12 @@
-Team Members:
-
-Group 11
-
-20CS30023
-20CS10064
-20CS10086
-20CS30059
-
-
-
+# Hands-on experience of using shared-memory
 
 To run the file:
+```
+g++ -o main main.cpp -D DEBUG
+./main
+```
 
+USE :  
 
-USE :  g++ -o main main.cpp -D DEBUG
-
-USE :  ./main
+USE :  
 
