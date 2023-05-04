@@ -7,7 +7,7 @@ Assignments for the OS Lab Course Offered in the Spring Semester of 2023.
 - 20CS30059: Yatharth Sameer
 - 20CS10086: Archit Mangrulkar
 
-## Assignment 1 : shell scripting and shell commands
+## Assignment 1 : Shell scripting and shell commands
 Programs in shell script under the Linux env. that would run in bash terminal and perform the following Tasks
 - <code>Computation - Finding LCM</code> : reverses all the numbers and outputs their LCM.
 - <code>Pattern Matching - Username Validation</code> : checks if the usernames in file are valid or not.
@@ -19,6 +19,17 @@ Programs in shell script under the Linux env. that would run in bash terminal an
 - <code>CSV File Manipulation</code> : track expenses by adding, sorting and displaying records in a csv file with columns for date, category, amount, and name. And also provide options to view total expenses.
 - <code>Data Analysis</code> : takes text file input, and outputs the count of majors in descending order, names of students with 2 or more majors alphabetically, and number of students with a single major.
 
+## Assignment 2 : Use of syscall
+A shell as an application program on top of the Linux kernel. The shell will accept user commands and execute them. 
+- Run external commands with input/output redirection, 
+- Run external commands in the background, 
+- Run several external commands in pipe mode, 
+- Interrupt commands running in the shell using the signal call, 
+- Move a command in execution to the background, 
+- Change the current working directory of the shell, 
+- Print the name of the working directory, 
+- Handle wildcards in commands
+Additionally, the shell , search through history using up/down arrow keys, and detects simple malwares.
 
 ## Assignment 1 : shell scripting and shell commands
 - **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
