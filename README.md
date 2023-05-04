@@ -48,6 +48,8 @@ A <code>push update mechanism</code> using multiple <code>threads</code> for a s
 - **pushUpdate :** A set of 25 threads monitor a shared queue populated by userSimulator, and for each new action in the queue, a worker thread will push updates to all neighbors of the associated node by adding the element to their feed queue, using conditional variables to optimize monitoring.
 - **readPost :** A set of 10 threads monitor the neighbors' feed queues, deque actions and print messages in either chronological or priority order depending on the node variable. The monitoring will use conditional variables to improve efficiency.
 
+Note: To avoid race conditions, the use of locks is necessary, but using too many locks or a global lock will slow down the functionalities. So the design of locks and functionalities is carefully planned.
+
 
 ## Assignment 1 : shell scripting and shell commands
 - **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
