@@ -1,17 +1,17 @@
-#include <iostream>
-#include <map>
-#include <unordered_map>
-#include <set>
-#include <fstream>
+// g++ -pthread -std=c++11 -o a.out main.cpp
+#include <bits/stdc++.h>
 #include <string.h>
-#include <cmath>
-#include <vector>
-#include <algorithm>
-#include <pthread.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <time.h>
+#include <sys/time.h>
 #include <unistd.h>
-#include <queue>
-#include <chrono>
-#include <thread>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <pthread.h>
+
+using namespace __gnu_pbds;
 using namespace std;
 
 #define USER_SIMULATOR 1
@@ -25,46 +25,13 @@ using namespace std;
 #define COLOR_RESET "\033[0m"
 #define NUM_NODES 37700
 
+auto start = chrono::high_resolution_clock::now();
 string filename = "musae_git_edges.csv";
 string output_file = "sns.log";
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-// pthread_cond_t condWall = PTHREAD_COND_INITIALIZER;
-// pthread_cond_t condFeed = PTHREAD_COND_INITIALIZER;
-// pthread_cond_t condSleeep = PTHREAD_COND_INITIALIZER;
-
-pthread_mutex_t actionQueueMutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t postQueueMutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t actionQueueNotEmpty = PTHREAD_COND_INITIALIZER;
-pthread_cond_t postQueueNotEmpty = PTHREAD_COND_INITIALIZER;
-vector<pthread_mutex_t> feedQueueLock(NUM_NODES, PTHREAD_MUTEX_INITIALIZER);
-
-// Returns a random number between low and high
-int rand(int low, int high)
-{
-    return low + rand() % (high - low + 1);
-}
-
-// A wrapper around pthread_mutex_lock for error detection
-void LOCK(pthread_mutex_t mutex)
-{
-    int status = pthread_mutex_lock(&mutex);
-    if (status != 0)
-    {
-        printf(COLOR_RED "pthread_mutex_lock failed: %s\n" COLOR_RESET, strerror(status));
-        exit(1);
-    }
-}
-
-// A wrapper around pthread_mutex_unlock for error detection
-void UNLOCK(pthread_mutex_t mutex)
-{
-    int status = pthread_mutex_unlock(&mutex);
-    if (status != 0)
-    {
-        printf(COLOR_RED "pthread_mutex_unlock failed: %s\n" COLOR_RESET, strerror(status));
-        exit(1);
-    }
-}
+#define total_users 37700
+#define total_edges 289003
+char *buff = (char *)malloc(100);
+#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> //
 
 // A Function to print the Time Elapsed
 void printTime(chrono::high_resolution_clock::time_point start, chrono::high_resolution_clock::time_point curr)
@@ -159,7 +126,7 @@ typedef struct ActionQueue
     }
 } ActionQueue;
 
-typedef struct Node
+typedef struct Node1
 {
     int id; // node id
     int degree;
@@ -242,7 +209,7 @@ typedef struct Node
         }
         this->Feed.actl.push_back(A);
     }
-    Node &operator=(const Node &other)
+    Node1 &operator=(const Node1 &other)
     {
         if (this != &other)
         { // check for self-assignment
@@ -256,345 +223,300 @@ typedef struct Node
         }
         return *this;
     }
-} Node;
+} Node1;
 
-//  create map of nodes
-//  create map of all action queues, from where to pop in pushUpdates
-
-struct cmp
+// A wrapper around pthread_mutex_lock for error detection
+void LOCK(pthread_mutex_t mutex)
 {
-    bool operator()(const std::pair<int, int> &a, const std::pair<int, int> &b) const { return a.second > b.second; }
-};
-ActionQueue AQueue;
-ActionQueue FQueue;
-map<int, set<int>> test;
-std::map<int, unordered_map<int, int>> priority_map;
-map<int, Node> graph;
-map<int, int> mp;
-map<int, int> mp1;
-int sleep_flag = 0;
-
-/*
- * implementation of the priority map
- */
-void precomutePriority()
-{
-    // Initialize priority_map with an empty unordered_map for each node
-    for (auto const &node : graph)
-        priority_map[node.first] = unordered_map<int, int>();
-    // Iterate over all edges to compute neighbor counts
-    for (auto const &node : graph)
+    int status = pthread_mutex_lock(&mutex);
+    if (status != 0)
     {
-        vector<pair<int, int>> sorted_neighbors(node.second.neighbours.begin(), node.second.neighbours.end());
-        sort(sorted_neighbors.begin(), sorted_neighbors.end());
-
-        for (auto const &neighbor : sorted_neighbors)
-        {
-            vector<pair<int, int>> sorted_neighbors_of_neighbor(graph[neighbor.first].neighbours.begin(), graph[neighbor.first].neighbours.end());
-            sort(sorted_neighbors_of_neighbor.begin(), sorted_neighbors_of_neighbor.end());
-
-            auto it1 = sorted_neighbors_of_neighbor.begin();
-            auto it2 = sorted_neighbors.begin();
-
-            while (it1 != sorted_neighbors_of_neighbor.end() && it2 != sorted_neighbors.end())
-            {
-                if (it1->first == it2->first)
-                {
-                    if (it1->first != node.first)
-                    {
-                        auto &neighbor_counts = priority_map[node.first];
-                        neighbor_counts[it1->first]++;
-                    }
-                    it1++;
-                    it2++;
-                }
-                else if (it1->first < it2->first)
-                {
-                    it1++;
-                }
-                else
-                {
-                    it2++;
-                }
-            }
-        }
+        printf(COLOR_RED "pthread_mutex_lock failed: %s\n" COLOR_RESET, strerror(status));
+        exit(1);
     }
 }
-// The function for the producer threads to execute
+
+// A wrapper around UNLOCK for error detection
+void UNLOCK(pthread_mutex_t mutex)
+{
+    int status = pthread_mutex_unlock(&mutex);
+    if (status != 0)
+    {
+        printf(COLOR_RED "UNLOCK failed: %s\n" COLOR_RESET, strerror(status));
+        exit(1);
+    }
+}
+
+// struct action
+struct action
+{
+    int user_id;
+    int action_id;
+    int action_type;
+    time_t time_stamp;
+    int priority;
+};
+
+struct cmp1 // comparator for priority queue
+{
+    bool operator()(action a, action b)
+    {
+        return a.time_stamp > b.time_stamp;
+    }
+};
+
+struct cmp2 //
+{
+    bool operator()(action a, action b)
+    {
+        return a.priority > b.priority;
+    }
+};
+
+// Node class for user
+struct Node
+{
+public:
+    int id;
+    int action_cnt[3];
+    int order;                                        // 0 for priority and 1 for chronological
+    queue<action> wq;                                 // wall queue for user
+    priority_queue<action, vector<action>, cmp1> fq1; // feed queue for user
+    priority_queue<action, vector<action>, cmp2> fq2; // feed queue for user
+    Node()
+    {
+        this->order = rand() % 2;
+        this->action_cnt[0] = 0;
+        this->action_cnt[1] = 0;
+        this->action_cnt[2] = 0;
+        fq1 = priority_queue<action, vector<action>, cmp1>();
+        fq2 = priority_queue<action, vector<action>, cmp2>();
+    }
+};
+map<int, set<int>> graph;
+map<pair<int, int>, int> neighbours;
+vector<Node> User(total_users, Node());
+map<int, int> degree;
+map<int, string> actions_types;
+
+queue<action> shared_queue;
+pthread_mutex_t shared_queue_lock;
+pthread_cond_t shared_queue_cond;
+int shared_queue_size = 0;
+
+// ordered_set cfq;
+queue<int> cfq;
+pthread_mutex_t cfq_lock;
+pthread_cond_t cfq_cond;
+int cfq_size = 0;
+
+pthread_mutex_t feed_queue_lock[total_users];
+int feed_queue_size[total_users];
+// pthread_cond_t feed_queue_cond;
+
+FILE *outputfile = fopen(output_file.c_str(), "wb");
+
+void PRINT(char *buff)
+{
+    int buff_size = sizeof(char) * strlen(buff);
+    fwrite(buff, sizeof(char), buff_size, outputfile);
+    fwrite(buff, sizeof(char), buff_size, stdout);
+}
+void calculate_common_neigbours(int u, int v)
+{
+    int cnt = 0;
+    for (auto it : graph[u])
+    {
+        if (graph[v].find(it) != graph[v].end())
+        {
+            cnt++;
+        }
+    }
+    neighbours[make_pair(u, v)] = cnt;
+    neighbours[make_pair(v, u)] = cnt;
+}
+
 void *userSimulator(void *arg)
 {
-    ThreadArgs *thread_args = (ThreadArgs *)arg;
-    chrono::high_resolution_clock::time_point start = thread_args->start_time;
-    srand(time(NULL) * getpid());
-    std::ofstream file(output_file, std::ios::app);
-    if (!file.is_open())
-    {
-        cerr << "Unable to open "
-             << output_file << endl;
-        exit(EXIT_FAILURE);
-    }
+    bzero(buff, 100);
     auto curr = chrono::high_resolution_clock::now();
     printf(COLOR_GREEN "UserSimulator started. Runtime %lld seconds\n" COLOR_RESET, chrono::duration_cast<chrono::seconds>(curr - start));
-    file << "UserSimulator started. Runtime " << chrono::duration_cast<chrono::seconds>(curr - start).count() << " seconds\n";
-    file.close();
-    int i = 1;
-    vector<string> action = {"post", "comment", "like"};
-    for (int x = 1;; x++)
+    for (int x = 0;; x++)
     {
-        std::ofstream outfile(output_file, std::ios::app);
-        if (!outfile.is_open())
+        set<int> nodes; // set of nodes to be selected
+        for (; nodes.size() < 100;)
         {
-            cerr << "Unable to open "
-                 << output_file << endl;
-            exit(EXIT_FAILURE);
+            int random_node = rand() % total_users;
+            sprintf(buff, "User_Simulator_Thread :: Selected Node: %d \n", random_node);
+            PRINT(buff);
+            nodes.insert(random_node);
         }
-        curr = chrono::high_resolution_clock::now();
-        printf(COLOR_RED "Iteration #%d. Runtime %lld seconds\n" COLOR_RESET, x, chrono::duration_cast<chrono::seconds>(curr - start));
-        outfile << "Iteration #" << i << ". Runtime " << (chrono::duration_cast<chrono::seconds>(curr - start).count()) << " seconds\n";
-        int NUM_NODE = graph.size();
-        auto curr = chrono::high_resolution_clock::now();
-        auto diff = chrono::duration_cast<chrono::seconds>(curr - start);
-        printf("Nodes Selected: The following randomly selected Users will Create Actions.\n");
-        outfile << "Nodes Selected: The following randomly selected Users will Create actions.\n";
-        // LOCK(mutex);
-        // while (AQueue.actl.size() == QUEUE_SIZE)
-        // {
-        //     pthread_cond_wait(&condWall, &mutex);
-        // }
-        for (int i = 0; i < 100; i++)
+        for (auto it : nodes)
         {
-            int user_id = (rand() % (NUM_NODE));
-            int action_created = log2(graph[user_id].degree);
-            mp[user_id] += action_created;
-            for (int j = 0; j < action_created; j++)
+            PRINT(buff);
+            if (degree[it] == 0)
+                continue;
+            int n = log2(degree[it]) + 1;
+            for (int i = 0; i < n; i++)
             {
-                Node n = graph[user_id];
-                string action_type = action[rand() % 3];
-                pthread_mutex_lock(&actionQueueMutex);
-                int action_id = n.addWallQueue(action_type, n.order);
-                Action ac;
-                ac.init(user_id, action_id, action_type, n.order);
-                AQueue.addAction(ac);
-                graph[user_id] = n;
-                pthread_mutex_unlock(&actionQueueMutex);
+                int r = rand() % 3;
+                action act;
+                act.action_id = User[it].action_cnt[r] + 1;
+                User[it].action_cnt[r] += 1;
+                act.action_type = r;
+                act.time_stamp = time(NULL); // time stamp
+                act.user_id = it;
+                User[it].wq.push(act);
+
+                // Critical Section Start
+                LOCK(shared_queue_lock);
+
+                shared_queue.push(act);
+                shared_queue_size++;
+                pthread_cond_broadcast(&shared_queue_cond);
+
+                UNLOCK(shared_queue_lock);
+
+                // Critical Section End
+
+                sprintf(buff, "User_Simulator_Thread :: User %d take action : %s %d on %s", it, actions_types[r].c_str(), act.action_id, ctime(&act.time_stamp));
+                PRINT(buff);
             }
-            cout << user_id << " ";
-            outfile << user_id << " ";
-            
-            if ((i + 1) % 25 == 0)
+            for (auto itr : graph[it])
             {
-                outfile << endl;
-                cout << endl;
-            }
+                calculate_common_neigbours(it, itr);
+            };
         }
-        pthread_cond_broadcast(&actionQueueNotEmpty);
-        if (outfile.is_open())
-            outfile.close();
-        sleep_flag = 1;
-        // pthread_cond_broadcast(&condWall);
-        // UNLOCK(mutex);
-        // sleep(20);
         std::this_thread::sleep_for(std::chrono::seconds(40));
-        // sleep_flag = 0;
-        // pthread_cond_broadcast(&condSleeep);
-        i++;
     }
     pthread_exit(NULL);
 }
 
-void *pushUpdate(void *arg)
+void *pushUpdate(void *arg) // push update to feed queue
 {
-    ThreadArgs *thread_args = (ThreadArgs *)arg;
-    chrono::high_resolution_clock::time_point start = thread_args->start_time;
-    int i = 1;
+    bzero(buff, 100);
     while (1)
     {
-        // LOCK(mutex);
-        std::ofstream outfile(output_file, std::ios::app);
-        if (!outfile.is_open())
+        // Critical Section Start
+        LOCK(shared_queue_lock);
+        while (shared_queue_size == 0)
+            pthread_cond_wait(&shared_queue_cond, &shared_queue_lock);
+        action act = shared_queue.front();
+        shared_queue.pop();
+        shared_queue_size--;
+        UNLOCK(shared_queue_lock);
+        // Critical Section End
+        for (auto it : graph[act.user_id])
         {
-            cerr << "Unable to open " << output_file << endl;
-            exit(EXIT_FAILURE);
+            act.priority = neighbours[make_pair(act.user_id, it)];
+            //  Critical Section Start
+            LOCK(feed_queue_lock[it]);
+            User[it].order ? User[it].fq2.push(act) : User[it].fq1.push(act);
+            feed_queue_size[it]++;
+            sprintf(buff, "Pushing %d from %d feed queue.\n", it, act.user_id);
+            PRINT(buff);
+            UNLOCK(feed_queue_lock[it]);
+            // Critical Section End
+            //  Critical Section Start
+            LOCK(cfq_lock);
+            cfq.push(it);
+            cfq_size++;
+            pthread_cond_broadcast(&cfq_cond);
+
+            UNLOCK(cfq_lock);
+
+            // Critical Section End
         }
-        outfile.close();
-        pthread_mutex_lock(&actionQueueMutex);
-        while (AQueue.actl.empty())
-            pthread_cond_wait(&actionQueueNotEmpty, &actionQueueMutex);
-        // while (FQueue.actl.size() == QUEUE_SIZE)
-        //     pthread_cond_wait(&condFeed, &mutex);
-        while (!AQueue.actl.empty())
-        {
-            Action A = AQueue.pop();
-            pthread_mutex_unlock(&actionQueueMutex);
-            if (A.action_type == "post")
-                AQueue.cnt_post--;
-            else if (A.action_type == "comment")
-                AQueue.cnt_comment--;
-            else if (A.action_type == "like")
-                AQueue.cnt_like--;
-            else
-            {
-                perror("action_error: No Such Action Exists.\n");
-                exit(0);
-            }
-            // Push the Action to the Feed of the User's Neighbours
-            for (auto it : graph[A.user_id].neighbours)
-            {
-                pthread_mutex_lock(&feedQueueLock[it.first]);
-                A.add_Reader(it.first);
-                graph[it.first].AddFeedAction(A);
-                std::ofstream outfile(output_file, std::ios::app);
-                if (!outfile.is_open())
-                {
-                    cerr << "Unable to open " << output_file << endl;
-                    exit(EXIT_FAILURE);
-                }
-                cout << "Pushing to " << A.reader_id << " "
-                     << "from " << A.user_id << endl;
-                outfile << "Pushing to " << A.reader_id << " " << "from " << A.user_id << endl;
-                FQueue.addAction(A);
-                if (outfile.is_open())
-                    outfile.close();
-                mp1[it.first] = 1;
-                pthread_cond_broadcast(&postQueueNotEmpty);
-                pthread_mutex_unlock(&feedQueueLock[it.first]);
-            }
-            i++;
-        }
-        // pthread_cond_broadcast(&condFeed);
-        // pthread_cond_broadcast(&condWall);
-        // UNLOCK(mutex);
-        std::ofstream outfile1(output_file, std::ios::app);
-        if (!outfile1.is_open())
-        {
-            cerr << "Unable to open " << output_file << endl;
-            exit(EXIT_FAILURE);
-        }
-        if (outfile1.is_open())
-            outfile1.close();
     }
     pthread_exit(NULL);
 }
 
-void *readPost(void *arg)
+void *readPost(void *) // feed update to user
 {
-    ThreadArgs *thread_args = (ThreadArgs *)arg;
-    chrono::high_resolution_clock::time_point start = thread_args->start_time;
-    pthread_mutex_t mutex = thread_args->mutex;
+    bzero(buff, 100);
     while (1)
     {
-        LOCK(postQueueMutex);
-        while (FQueue.actl.empty())
+        //  Critical Section Start
+        LOCK(cfq_lock);
+        while (cfq_size == 0)
+            pthread_cond_wait(&cfq_cond, &cfq_lock);
+        int fr = cfq.front();
+        cfq.pop();
+        cfq_size--;
+
+        UNLOCK(cfq_lock);
+
+        // Critical Section End
+
+        //  Critical Section Start
+        LOCK(feed_queue_lock[fr]);
+        if (User[fr].order)
         {
-            pthread_cond_wait(&postQueueNotEmpty, &postQueueMutex);
+            while (!User[fr].fq2.empty()) //
+            {
+                action act = User[fr].fq2.top();
+                User[fr].fq2.pop();
+                feed_queue_size[fr]--;
+                sprintf(buff, "I read action number %d of type %s posted by user %d at time %s", act.action_id, (char *)actions_types[act.action_type].c_str(), fr, ctime(&act.time_stamp));
+                PRINT(buff);
+            }
         }
-        UNLOCK(postQueueMutex);
-        while (!FQueue.actl.empty())
+        else
         {
-            pthread_mutex_lock(&postQueueMutex);
-            std::ofstream file(output_file, std::ios::app);
-            if (!file.is_open())
+            while (!User[fr].fq1.empty()) //
             {
-                cerr << "Unable to open " << output_file << endl;
-                exit(EXIT_FAILURE);
+                action act = User[fr].fq1.top();
+                User[fr].fq1.pop();
+                feed_queue_size[fr]--;
+                sprintf(buff, "I read action number %d of type %s posted by user %d at time %s", act.action_id, (char *)actions_types[act.action_type].c_str(), fr, ctime(&act.time_stamp));
+                PRINT(buff);
             }
-            Action f = FQueue.pop();
-            file << f.user_id << endl;
-            bool chronological_order = f.order;
-            int user_id = f.user_id;
-            Node n = graph[f.reader_id];
-            deque<Action> actions = n.Feed.actl;
-            pthread_cond_broadcast(&postQueueNotEmpty);
-            pthread_mutex_unlock(&postQueueMutex);
-            pthread_mutex_lock(&feedQueueLock[f.reader_id]);
-            // if (actions.size() == 0)
-            //     break;
-            // else if (actions.size() >= 2)
-            // {
-            //     sort(actions.begin(), actions.end(), [](const Action &a1, const Action &a2)
-            //          {
-            //     if (priority_map[a1.user_id][a1.reader_id] != priority_map[a2.user_id][a2.reader_id]) {
-            //         return priority_map[a1.user_id][a1.reader_id] != priority_map[a2.user_id][a2.reader_id];
-            //     } else {
-            //         return a1.timestamp < a2.timestamp;
-            // } });
-            // }
-            if(file.is_open()) file.close();
-            for (auto action : actions)
-            {
-                cout << "I read action number " << action.action_id << " of type " << action.action_type << " posted by " << action.user_id  << " at time " << ctime(&action.timestamp);
-                std::ofstream file(output_file, std::ios::app);
-                if (!file.is_open())
-                {
-                    cerr << "Unable to open " << output_file << endl;
-                    exit(EXIT_FAILURE);
-                }
-                file << "I read action number " << action.action_id << " of type " << action.action_type << " posted by " << action.user_id  << " at time " << ctime(&action.timestamp);
-                if(file.is_open())
-                    file.close();
-            }
-            cout << endl;
-            pthread_mutex_unlock(&feedQueueLock[f.reader_id]);
         }
-        
-        // cout << "Exit" << endl;
-        // pthread_cond_broadcast(&condFeed);
-        // UNLOCK(mutex);
+        UNLOCK(feed_queue_lock[fr]);
+        // Critical Section End
     }
     pthread_exit(NULL);
 }
 signed main()
 {
-    std::ofstream file_clear(output_file);
-    if (!file_clear.is_open())
-    {
-        cerr << "Unable to open " << output_file << endl;
-        exit(EXIT_FAILURE);
-    }
-    if (file_clear.is_open())
-        file_clear.close();
-    test.clear();
-    graph.clear();
-    mp.clear();
-    mp1.clear();
-    priority_map.clear();
-    void *status;
-    // Starting Time of Execution
-    auto start = chrono::high_resolution_clock::now();
-    // Open the CSV file for reading
-    ifstream infile(filename);
-    if (!infile)
-    {
-        cerr << "Unable to open " << filename << endl;
-        exit(EXIT_FAILURE);
-    }
+    ios::sync_with_stdio(false);
+    cin.tie(0);
     cout << COLOR_BLUE << "----PUSH UPDATE SYSTEM FOR SOCIAL MEDIA SYSTEM ----" << COLOR_RESET << endl;
-    // Read the CSV file line by line
+    // cond inits
+    pthread_cond_init(&shared_queue_cond, NULL);
+    pthread_cond_init(&cfq_cond, NULL);
+
+    // mutex inits
+    pthread_mutex_init(&shared_queue_lock, NULL);
+    pthread_mutex_init(&cfq_lock, NULL);
+    for (int i = 0; i < 100; i++)
+        pthread_mutex_init(&feed_queue_lock[i], NULL);
+    srand(time(NULL));
+    setvbuf(outputfile, NULL, _IONBF, 0);
+
+    actions_types[0] = "post";
+    actions_types[1] = "comment";
+    actions_types[2] = "like";
+    char buff[100];
+    sprintf(buff, "Main_Thread ::Main thread awoke\n");
+    PRINT(buff); //
+    ifstream inp(filename);
     string line;
-    int i = 0, id1, id2;
+    getline(inp, line);
     cout << " -> Reading the CSV File for Input :::" << endl;
-    while (getline(infile, line))
+    while (getline(inp, line))
     {
-        // Split the line by commas
-        if (i == 0)
-        {
-            i++;
-            continue;
-        }
-        sscanf(line.c_str(), "%d,%d", &id1, &id2);
-        i++;
-        // Add the ids to the vector
-        if (graph.count(id1) == 0)
-            graph[id1].init(id1);
-        if (graph.count(id2) == 0)
-            graph[id2].init(id2);
-        graph[id1].addEdge(id2);
-        graph[id2].addEdge(id1);
-        test[id1].insert(id2);
-        test[id2].insert(id1);
+        int u, v;
+        sscanf(line.c_str(), "%d,%d", &u, &v);
+        if (graph.find(u) != graph.end())
+            User[u].id = u;
+        if (graph.find(v) != graph.end())
+            User[v].id = v;
+        degree[u]++;
+        degree[v]++;
+        graph[u].insert(v);
+        graph[v].insert(u);
     }
-    if (infile.is_open())
-        infile.close();
 #ifdef DEBUG_LOAD
     std::ofstream file("degree.txt");
     if (!file)
@@ -646,9 +568,13 @@ signed main()
     if (file2.is_open())
         file2.close();
 #endif
-    
+    cout << " -> Precomputing the Priority of the Nodes's Neighbours for Every Node :::" << endl;
+    // priority_map.clear();
+    // precomutePriority();
+    cout << " * Precomputation Done" << endl;
 #ifdef DEBUG_PRIORITY
     ofstream file("priority.txt");
+
     if (!file)
     {
         cerr << "Unable to open "
@@ -665,78 +591,59 @@ signed main()
     if (file.is_open())
         file.close();
 #endif
-    AQueue.init();
-    FQueue.init();
-    // UserSimulator Thread
-    pthread_t user_simulator[USER_SIMULATOR];
-    ThreadArgs thread_args;
-    thread_args.start_time = start;
-    printf("In main: Creating UserSimulator Thread\n");
-    // UserSimulator Thread
-    cout << " -> Creating UserSimulator Thread " << endl;
+    pthread_t userSimulator_thread, pushUpdate_thread[25], readPost_thread[10];
     int ret = 0;
-    for (int i = 0; i < USER_SIMULATOR; i++)
-    {
-        thread_args.thread_id = i + 1;
-        ret = pthread_create(&user_simulator[i], NULL, userSimulator, (void *)&thread_args);
-        if (ret != 0)
-        {
-            perror("Error: UserSimulator pthread_create() failed\n");
-            exit(EXIT_FAILURE);
-        }
-    }
-    cout << " -> Creating PushUpdate Thread " << endl;
-    // PushUpdate Threads
-    pthread_t push_updates[PUSH_UPDATE];
+    pthread_create(&userSimulator_thread, NULL, userSimulator, NULL);
+
     for (int i = 0; i < PUSH_UPDATE; i++)
     {
-        thread_args.thread_id = i + 1;
-        ret = pthread_create(&push_updates[i], NULL, pushUpdate, (void *)&thread_args);
+        ret = pthread_create(&pushUpdate_thread[i], NULL, pushUpdate, NULL);
         if (ret != 0)
         {
-            printf("Error: PUshUpdate pthread_create() failed\n");
-            exit(EXIT_FAILURE);
+            printf("Error in creating thread %d\n", i);
+            exit(1);
         }
     }
-    // ReadPost Threads
-    pthread_t read_post[READ_POST];
+
     for (int i = 0; i < READ_POST; i++)
+
     {
-        thread_args.thread_id = i + 1;
-        ret = pthread_create(&read_post[i], NULL, readPost, (void *)&thread_args);
+        ret = pthread_create(&readPost_thread[i], NULL, readPost, NULL);
         if (ret != 0)
         {
-            printf("Error: ReadPost pthread_create() failed\n");
-            exit(EXIT_FAILURE);
+            printf("Error in creating thread %d\n", i);
+            exit(1);
         }
     }
-    // join all the threads
-    for (int i = 0; i < USER_SIMULATOR; i++)
+
+    pthread_join(userSimulator_thread, NULL);
+
+    for (int i = 0; i < 25; i++)
     {
-        ret = pthread_join(user_simulator[i], &status);
+        ret = pthread_join(pushUpdate_thread[i], NULL);
         if (ret != 0)
         {
-            perror("Error: pthread_join() failed\n");
-            exit(EXIT_FAILURE);
+            printf("Error in creating thread %d\n", i);
+            exit(1);
         }
     }
-    for (int i = 0; i < PUSH_UPDATE; i++)
+    for (int i = 0; i < 10; i++)
+
     {
-        ret = pthread_join(push_updates[i], &status);
+        ret = pthread_join(readPost_thread[i], NULL);
         if (ret != 0)
         {
-            perror("Error: pthread_join() failed\n");
-            exit(EXIT_FAILURE);
+            printf("Error in creating thread %d\n", i);
+            exit(1);
         }
     }
-    for (int i = 0; i < READ_POST; i++)
+    fclose(outputfile);
+    // pthread destroy
+    int i = 0;
+    while (i < 100)
     {
-        ret = pthread_join(read_post[i], &status);
-        if (ret != 0)
-        {
-            perror("Error: pthread_join() failed\n");
-            exit(EXIT_FAILURE);
-        }
+        pthread_mutex_destroy(&feed_queue_lock[i]);
+        i++;
     }
 #ifdef DEBUG_SUM
     int ans = 0;
@@ -747,9 +654,10 @@ signed main()
     }
     cout << ans << " " << AQueue.actl.size() << endl;
 #endif
-    // pthread_mutex_destroy(&mutex);
-    // pthread_cond_destroy(&condWall);
-    // pthread_cond_destroy(&condFeed);
-    // pthread_cond_destroy(&condSleeep);
+
+    pthread_cond_destroy(&shared_queue_cond);
+    pthread_cond_destroy(&cfq_cond);
+    pthread_mutex_destroy(&shared_queue_lock);
+    pthread_mutex_destroy(&cfq_lock);
     pthread_exit(NULL);
 }
