@@ -9,11 +9,11 @@ Assignments for the OS Lab Course Offered in the Spring Semester of 2023.
 
 ## Assignment 1 : shell scripting and shell commands
 Programs in shell script under the Linux environment that would run in bash terminal and perform the following Tasks
-- **Finding LCM** : reverses all the numbers and outputs their LCM
-- **Pattern Matching** : Username Validation
-- JSON Parsing : convert each JSONL file into a CSV file
-- File Manipulation : converting a line to alternating case without loops
-- Pattern matching 
+- Computation - Finding LCM : reverses all the numbers and outputs their LCM
+- Pattern Matching - Username Validation : checks if the username is valid or not
+- File Handling - JSON Parsing : convert each JSONL file into a CSV file
+- File Manipulation / Argument Handling : converting a line to alternating case without loops
+- Pattern matching : input to the folder and iterate through all the python files in the directory and subdirectories and print the file name along with the path and all the comments in the file with their line numbers.
 - File Handling/Sieve of Eratosthenes/Loops/Arrays
 - File Handling / Sorting / Understanding strings
 - CSV File Manipulation
