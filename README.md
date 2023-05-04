@@ -51,7 +51,7 @@ A <code>push update</code> mechanism using multiple <code>threads</code> for a s
 Note: To avoid race conditions, the use of locks is necessary, but using too many locks or a global lock will slow down the functionalities. So the design of locks and functionalities is carefully planned.
 
 
-## Assignment 1 : shell scripting and shell commands
+## Assignment 5 : Semaphores to synchronize between threads
 - **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
 - **Question 2:** Write a simple TCP iterative server and client to evaluate arithmetic expressions
 
