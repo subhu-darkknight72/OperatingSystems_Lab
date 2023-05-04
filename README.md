@@ -36,6 +36,7 @@ Additionally, the shell searches through history using up/down arrow keys, and d
 There will be 1 producer process updating a Facebook friend circle network and 10 consumer (worker) processes calculating shortest paths between people, using <code>shared memory</code> to communicate between processes.
 - Main Process: Loads a dynamic graph into a shared memory. Spawns the producer & consumer processes
 - Producer process : updates the graph every 50 seconds by randomly adding m new nodes (10-30) that connect to k existing nodes (1-20) with probability proportional to the degree of the existing nodes.
+- Consumer process : wake up every 30 seconds, count the nodes, and run Dijkstra’s shortest path algorithm on a designated set of nodes (1/10 of all nodes) in the graph to find the shortest path from each source node to all reachable nodes, and append them to a specific file.
 
 ## Assignment 1 : shell scripting and shell commands
 - **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
