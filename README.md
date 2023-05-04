@@ -20,7 +20,7 @@ Programs in shell script under the Linux env. that would run in bash terminal an
 - <code>Data Analysis</code> : takes text file input, and outputs the count of majors in descending order, names of students with 2 or more majors alphabetically, and number of students with a single major.
 
 ## Assignment 2 : Use of syscall
-A shell as an application program on top of the Linux kernel. The shell will accept user commands and execute them. 
+A shell as an application program on top of the Linux kernel. It accepts user commands and execute them. 
 - Run external commands with input/output redirection, 
 - Run external commands in the background, 
 - Run several external commands in pipe mode, 
@@ -29,6 +29,7 @@ A shell as an application program on top of the Linux kernel. The shell will acc
 - Change the current working directory of the shell, 
 - Print the name of the working directory, 
 - Handle wildcards in commands
+
 Additionally, the shell , search through history using up/down arrow keys, and detects simple malwares.
 
 ## Assignment 1 : shell scripting and shell commands
