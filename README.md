@@ -56,7 +56,8 @@ Note: To avoid race conditions, the use of locks is necessary, but using too man
 - **Question 2:** Write a simple TCP iterative server and client to evaluate arithmetic expressions
 
 ## Assignment 6 : Virtual memory management
-It aims to implement a basic memory management module that customizes memory allocation and deallocation for large-scale real-world systems. Such systems often have their memory management modules and do not rely on the OS for memory management.
+It aims to implement a basic memory management module that customizes memory allocation and deallocation for large-scale real-world systems. Such systems often have their memory management modules and do not rely on the OS for memory management. Here, we created our memory management library — a header file “goodmalloc.h” and an implementation file “goodmalloc.c” with following functionalities:
+
 - **Question 1:** A <code>iterative TCP server</code> to allow client programs to get the system date and time from the server. The client displays the date and time on the screen, and terminates.
 - **Question 2:** Write a simple TCP iterative server and client to evaluate arithmetic expressions
 
