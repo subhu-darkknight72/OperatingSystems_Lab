@@ -16,7 +16,7 @@ Programs in shell script under the Linux env. that would run in bash terminal an
 - Pattern matching : input to the folder and iterate through all the python files in the directory and subdirectories and print the file name, the path and all the comments in the file with their line numbers.
 - Loops/Arrays - Sieve of Eratosthenes : finds out all the prime divisors of “n” using SoE only once.
 - File Handling - Sorting :  gather names (across all files) beginning with the same letter in a single file
-- CSV File Manipulation : track expenses by adding, sorting and displaying records in a csv file and provide options to view total expenses.
+- CSV File Manipulation : track expenses by adding, sorting and displaying records in a csv file with columns for date, category, amount, and name. And also provide options to view total expenses.
 - Data Analysis
 
 ## Assignment 1 : shell scripting and shell commands
